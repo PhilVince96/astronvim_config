@@ -32,23 +32,28 @@ return {
     config = function() require("crates").setup() end,
   },
   {
-    "simrat39/rust-tools.nvim",
-    after = { "mason-lspconfig.nvim" },
-    -- Is configured via the server_registration_override installed below!
-    config = function()
-      local rt = require "rust-tools"
-
-      rt.setup {
-        server = {
-          on_attach = function(_, bufnr)
-            -- Hover actions
-            vim.keymap.set("n", "<Leader>k", rt.hover_actions.hover_actions, { buffer = bufnr })
-            -- Code action groups
-            vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-          end,
-          astronvim.lsp.server_settings "rust_analyzer", -- get the server-settings from the AstroNvim tables to allow use with lsp.server-settings and lsp.on_attach user configuration
+    "nvim-neorg/neorg",
+    lazy = false,
+    build = ":Neorg sync-parsers",
+    opts = {
+      load = {
+        ["core.defaults"] = {},       -- Loads default behaviour
+        ["core.norg.concealer"] = {}, -- Adds pretty icons to your documents
+        ["core.norg.dirman"] = {      -- Manages Neorg workspaces
+          config = {
+            workspaces = {
+              notes = "~/Neorg/notes",
+            },
+          },
         },
-      }
-    end,
-  },
+        ["core.norg.completion"] = {
+          config = {
+            engine = "nvim-cmp",
+            name = "[Neorg]",
+          }
+        },
+      },
+    },
+    dependencies = { { "nvim-lua/plenary.nvim" } },
+  }
 }
